@@ -16,8 +16,6 @@ import javafx.stage.Stage;
 
 public class ContentMenuController {
 
-
-
     @FXML
     private Label MenuLabel;
 

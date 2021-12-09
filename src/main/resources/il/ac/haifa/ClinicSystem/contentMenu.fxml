@@ -17,19 +17,7 @@
       <RowConstraints vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <GridPane GridPane.rowIndex="1">
-         <columnConstraints>
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
-            <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
-         </rowConstraints>
-         <children>
-            <Button fx:id="clinicListBtn" onAction="#showClinicList" text="Clinics" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-         </children>
-      </GridPane>
+      <Button fx:id="clinicListBtn" onAction="#showClinicList" text="Clinics" GridPane.rowIndex="1" />
       <Button fx:id="exitBtn" mnemonicParsing="false" onAction="#exitProgram" text="Exit" GridPane.rowIndex="2">
          <font>
             <Font name="System Bold" size="12.0" />
