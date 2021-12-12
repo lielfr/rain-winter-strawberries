@@ -4,8 +4,8 @@ import java.io.IOException;
 
 public class MainApp {
 	public static void main(String[] args) throws IOException {
-		String host = "127.0.0.1";
-		int port = 50001;
+		String host = args[0];
+		int port = Integer.parseInt(args[1]);
 		
 		SimpleClient chatClient = new SimpleClient(host, port, "contentAdmin");
 		chatClient.openConnection();

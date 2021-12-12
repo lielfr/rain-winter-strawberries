@@ -83,10 +83,29 @@
 	          <groupId>org.codehaus.mojo</groupId>
 	          <artifactId>exec-maven-plugin</artifactId>
 	          <version>3.0.0</version>
-	          <configuration>
-	          		<mainClass>il.ac.haifa.ClinicSystem.MainApp</mainClass>
-	          		<cleanupDaemonThreads>false</cleanupDaemonThreads>
-	          </configuration>
+                <executions>
+                    <execution>
+                        <id>server</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>il.ac.haifa.ClinicSystem.ClinicServer</mainClass>
+                            <cleanupDaemonThreads>false</cleanupDaemonThreads>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>client</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>il.ac.haifa.ClinicSystem.MainApp</mainClass>
+                            <cleanupDaemonThreads>false</cleanupDaemonThreads>
+                        </configuration>
+                    </execution>
+                </executions>
+
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

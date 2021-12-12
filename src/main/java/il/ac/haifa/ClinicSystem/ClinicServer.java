@@ -172,7 +172,7 @@ public class ClinicServer extends AbstractServer{
 			 } 
 		    //sessionFactory = getSessionFactory();
 			 
-			ClinicServer server = new ClinicServer(50001);
+			ClinicServer server = new ClinicServer(Integer.parseInt(args[0]));
 					// Integer.parseInt(args[0]));
 			server.listen();
 		
