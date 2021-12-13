@@ -22,16 +22,11 @@ import il.ac.haifa.ClinicSystem.entities.Clinic;
 import il.ac.haifa.ClinicSystem.ocsf.server.AbstractServer;
 import il.ac.haifa.ClinicSystem.ocsf.server.ConnectionToClient;
 
-//import javax.mail.*;
-//import javax.mail.internet.*;
-
 
 public class ClinicServer extends AbstractServer{
 	
 	private static Session session;
 	private static SessionFactory sessionFactory;
-	private static Double curPrice = 43.99;
-	private static Double futurePrice = -1.0;
 	
 	 private static SessionFactory getSessionFactory() throws HibernateException {
 		 Configuration configuration = new Configuration();
@@ -85,11 +80,6 @@ public class ClinicServer extends AbstractServer{
 			try {
 				 session = sessionFactory.openSession();
 				 session.beginTransaction();
-				 
-
-				// Movie m = (Movie)session.load(Movie.class, ((Movie)msg).getId());
-				// m.setDates(((Movie)msg).getDates());
-				// m.setName("The dragon reborn");
 				
 			    session.merge((Clinic)msg);
 				session.flush();
@@ -156,8 +146,6 @@ public class ClinicServer extends AbstractServer{
 				 session.beginTransaction();
 				 
 				 generateClinics();
-				 //List<Movie> movies = getAll(Movie.class);
-				 //System.out.println(movies);
 				 
 
 				 session.getTransaction().commit();

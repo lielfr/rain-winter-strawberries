@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 
 import il.ac.haifa.ClinicSystem.entities.Clinic;
 import il.ac.haifa.ClinicSystem.ocsf.client.AbstractClient;
-import javafx.application.Platform;
 
 public class SimpleClient extends AbstractClient{
 	private static final Logger LOGGER =
@@ -16,11 +15,8 @@ public class SimpleClient extends AbstractClient{
 
     
     private List<Clinic> clinics;
-    private List<String> cinemas = null;
-    private double curPrice;
     private boolean gotList = false;
-    private boolean gotPrice = false;
-	private App app;	
+	private App app;
 	private Thread loopThread, t;
 	private String userType;
 	public SimpleClient(String host, int port, String userType) {
