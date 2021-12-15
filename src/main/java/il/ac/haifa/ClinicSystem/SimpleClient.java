@@ -16,8 +16,7 @@ public class SimpleClient extends AbstractClient{
     
     private List<Clinic> clinics;
     private boolean gotList = false;
-	private App app;
-	private Thread loopThread, t;
+	private Thread loopThread;
 	private String userType;
 	public SimpleClient(String host, int port, String userType) {
 		super(host, port);
@@ -35,9 +34,8 @@ public class SimpleClient extends AbstractClient{
 		super.connectionEstablished();
 		LOGGER.info("Connected to server.");
 		SimpleClient chatClient = this;
-		if(this.userType.equals("contentAdmin")) {
+		if(this.userType.equals("user")) {
 			loopThread = new Thread(new Runnable() {
-				//private App temp = app;
 				@Override
 				public void run() {
 					App.main(chatClient);
