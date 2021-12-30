@@ -69,6 +69,7 @@ public class CovidServicesListController {
     @FXML
     void showChangeHours(ActionEvent event) throws InterruptedException, IOException { //change so that chosed day is displayed on changehours window, if there is any.
         Clinic curClinic = clinicTable.getSelectionModel().getSelectedItem();
+        String chosenDay = curClinic.getDayOfWeek().getSelectionModel().getSelectedItem();
         if(curClinic == null){
             notSelectedAlert.setContentText("No Clinic Selected!");
             notSelectedAlert.showAndWait();
@@ -78,8 +79,7 @@ public class CovidServicesListController {
         Scene scene;
         FXMLLoader fxmlLoader = new FXMLLoader(ClinicListController.class.getResource("changeHoursCovid.fxml"));
         ChangeHoursCovidController controller = new ChangeHoursCovidController();
-        controller.setClient(chatClient);
-        controller.setClinic(curClinic);
+        controller.setParams(chatClient, curClinic, chosenDay);
         fxmlLoader.setController(controller);
         scene = new Scene(fxmlLoader.load(), 1031, 419);
         stage.setScene(scene);

@@ -35,7 +35,7 @@ public class ChangeHoursController {
 
 
     private SimpleClient chatClient;
-    
+    private String chosenDay;
     private Clinic newClinic;
     private Clinic curClinic;
     private boolean isValid = false;
@@ -116,14 +116,13 @@ public class ChangeHoursController {
 		ObservableList<String> data = FXCollections.observableArrayList();
 		data.addAll(days);
 		dayChoice.setItems(data);
-    }
-    
-    public void setClient(SimpleClient c) {
-   	   this.chatClient = c;
+		dayChoice.setValue(chosenDay);
     }
 
-    public void setClinic(Clinic c) {
-        this.curClinic = c;
+    public void setParams(SimpleClient sc, Clinic c, String chosenDay) {
+		this.chatClient = sc;
+    	this.curClinic = c;
+    	this.chosenDay = chosenDay;
     }
 
 }

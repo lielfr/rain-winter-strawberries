@@ -63,6 +63,7 @@ public class DoctorClinicListController {
     @FXML
     void showChangeDoctorHours(ActionEvent event) throws InterruptedException, IOException {
         DoctorClinic curDoctorClinic = doctorClinicTable.getSelectionModel().getSelectedItem();
+        String chosenDay = curDoctorClinic.getDayOfWeek().getSelectionModel().getSelectedItem();
         if(curDoctorClinic == null){
             notSelectedAlert.setContentText("No Doctor Selected!");
             notSelectedAlert.showAndWait();
@@ -72,8 +73,7 @@ public class DoctorClinicListController {
         Scene scene;
         FXMLLoader fxmlLoader = new FXMLLoader(ClinicListController.class.getResource("changeHoursDoctor.fxml"));
         ChangeHoursDoctorController controller = new ChangeHoursDoctorController();
-        controller.setClient(chatClient);
-        controller.setDoctorClinic(curDoctorClinic);
+        controller.setParams(chatClient, curDoctorClinic, chosenDay);
         fxmlLoader.setController(controller);
         scene = new Scene(fxmlLoader.load(), 1031, 419);
         stage.setScene(scene);
