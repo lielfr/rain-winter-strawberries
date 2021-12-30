@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.persistence.TypedQuery;
@@ -11,14 +12,17 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import il.ac.haifa.ClinicSystem.entities.*;
+import javafx.util.Pair;
+import net.bytebuddy.asm.Advice;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
-import il.ac.haifa.ClinicSystem.entities.Clinic;
 import il.ac.haifa.ClinicSystem.ocsf.server.AbstractServer;
 import il.ac.haifa.ClinicSystem.ocsf.server.ConnectionToClient;
 
@@ -33,6 +37,10 @@ public class ClinicServer extends AbstractServer{
 		
 		 // Add ALL of your entities here. You can also try adding a whole package.
 		 configuration.addAnnotatedClass(Clinic.class);
+		 configuration.addAnnotatedClass(User.class);
+		 configuration.addAnnotatedClass(Patient.class);
+		 configuration.addAnnotatedClass(DoctorClinic.class);
+		 configuration.addAnnotatedClass(Doctor.class);
 		
 		 ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
 		 .applySettings(configuration.getProperties())
@@ -43,14 +51,35 @@ public class ClinicServer extends AbstractServer{
 	 
 	 private static void generateClinics() throws Exception {
 		 List<String> days = Arrays.asList("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday");
-		 List<LocalTime> open = new ArrayList<>(), close = new ArrayList<>();
+		 List<LocalTime> open = new ArrayList<>(), close = new ArrayList<>(), testopen = new ArrayList<>(), testclose = new ArrayList<>(), vaccopen = new ArrayList<>(), vaccclose = new ArrayList<>();
+		 HashMap<String, Pair<LocalTime,LocalTime>> workingHours = new HashMap<>();
 		 for(String d : days) {
 		 	open.add(LocalTime.of(8,0));
 		 	close.add(LocalTime.of(22,0));
+		 	testopen.add(LocalTime.of(8,0));
+		 	testclose.add(LocalTime.of(12,0));
+		 	vaccopen.add(LocalTime.of(8,0));
+		 	vaccclose.add(LocalTime.of(12,0));
+
+		 	if(d == "Monday"){
+				workingHours.put(d, null);
+			}
+		 	else{
+				workingHours.put(d, new Pair<>(LocalTime.of(10,0), LocalTime.of(16,0)));
+			}
 		 }
-		 Clinic c = new Clinic("The White Tower", "Tar Valon", open, close);
+		 Clinic c = new Clinic("The White Tower", "Tar Valon", open, close, testopen, testclose, vaccopen, vaccclose, true, true);
 		 //session.saveOrUpdate(temp);
+		 Doctor d = new Doctor("coolDoctor420", "password", "Mat Matthews", "Neurology");
+
+		 DoctorClinic dc = new DoctorClinic(c, d, workingHours);
+		 List<DoctorClinic> dcList = new ArrayList<DoctorClinic>();
+		 dcList.add(dc);
+		 c.setDoctorClinics(dcList);
+		 d.setDoctorClinics(dcList);
 		 session.saveOrUpdate(c);
+		 session.saveOrUpdate(d);
+		 session.saveOrUpdate(dc);
 		 /*
 		 * The call to session.flush() updates the DB immediately without ending the transaction.
 		 * Recommended to do after an arbitrary unit of work.
@@ -83,8 +112,8 @@ public class ClinicServer extends AbstractServer{
 				
 			    session.merge((Clinic)msg);
 				session.flush();
-				List<Clinic> movies = getAll(Clinic.class);
-				client.sendToClient(movies);
+				List<Clinic> clinics = getAll(Clinic.class);
+				client.sendToClient(clinics);
 				 
 			     
 
@@ -98,6 +127,33 @@ public class ClinicServer extends AbstractServer{
 			 } finally {
 					 session.close();
 			 }
+		}
+		if(msg instanceof DoctorClinic)  {
+			try {
+				session = sessionFactory.openSession();
+				session.beginTransaction();
+
+				session.merge((DoctorClinic)msg);
+				session.flush();
+				Clinic c = ((DoctorClinic) msg).getClinic();
+				String hql = "FROM DoctorClinic DC WHERE DC.clinic = :clinic";
+
+				@SuppressWarnings("unchecked")
+				Query q = session.createQuery(hql);
+				q.setParameter("clinic", c);
+				List<DoctorClinic> doctorClinics = (List<DoctorClinic>) q.list();
+				client.sendToClient(doctorClinics);
+
+				session.getTransaction().commit();
+			}catch (Exception exception) {
+				if (session != null) {
+					session.getTransaction().rollback();
+				}
+				System.err.println("An error occured, changes have been rolled back.");
+				exception.printStackTrace();
+			} finally {
+				session.close();
+			}
 		}
 		else if(((String) msg).equals("#ClinicList")) {
 			 try {
@@ -118,10 +174,29 @@ public class ClinicServer extends AbstractServer{
 					 session.close();
 			 }
 		}
+		else if(((String) msg).equals("#DoctorClinicList")) {
+			try {
+				session = sessionFactory.openSession();
+				session.beginTransaction();
+
+				List<DoctorClinic> doctorClinics = getAll(DoctorClinic.class);
+				client.sendToClient(doctorClinics);
+
+				session.getTransaction().commit();
+			}catch (Exception exception) {
+				if (session != null) {
+					session.getTransaction().rollback();
+				}
+				System.err.println("An error occured, changes have been rolled back.");
+				exception.printStackTrace();
+			} finally {
+				session.close();
+			}
+		}
 	}
 	
 	
-	
+
 	@Override
 	protected synchronized void clientDisconnected(ConnectionToClient client) {
 		// TODO Auto-generated method stub

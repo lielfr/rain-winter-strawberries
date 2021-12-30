@@ -31,6 +31,7 @@
          <children>
             <Button fx:id="returnBtn" layoutX="14.0" layoutY="7.0" mnemonicParsing="false" onAction="#returnToMenu" text="Return to Menu" />
           <Button fx:id="addBtn" layoutX="1051.0" layoutY="8.0" mnemonicParsing="false" onAction="#showChangeHours" text="Change Opening Hours" />
+            <Button fx:id="doctorClinicBtn" layoutX="931.0" layoutY="8.0" mnemonicParsing="false" onAction="#showDoctorClinic" text="Doctors in Clinic" />
          </children>
       </AnchorPane>
    </bottom>

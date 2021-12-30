@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import il.ac.haifa.ClinicSystem.entities.Clinic;
+import il.ac.haifa.ClinicSystem.entities.DoctorClinic;
 import il.ac.haifa.ClinicSystem.ocsf.client.AbstractClient;
 
 public class SimpleClient extends AbstractClient{
@@ -14,7 +15,7 @@ public class SimpleClient extends AbstractClient{
     private final Object lock = new Object();
 
     
-    private List<Clinic> clinics;
+    private List<?> curList;
     private boolean gotList = false;
 	private Thread loopThread;
 	private String userType;
@@ -50,7 +51,7 @@ public class SimpleClient extends AbstractClient{
 	@Override
 	protected void handleMessageFromServer(Object msg) {
 		if(msg instanceof List<?>) {
-			clinics = (List<Clinic>) msg;
+			curList = (List<?>)msg;
 			gotList = true;
 			synchronized (lock) {
 				lock.notifyAll();
@@ -79,10 +80,13 @@ public class SimpleClient extends AbstractClient{
 	 }
 	 
 	 public List<Clinic> getClinicList(){
-		 return clinics;
+		 return (List<Clinic>)curList;
 	 }
+	 public List<DoctorClinic> getDoctorClinicList(){
+		return (List<DoctorClinic>)curList;
+	}
 	
-	public static void main(String[] args) throws IOException {
+	 public static void main(String[] args) throws IOException {
 			
 		
 	}

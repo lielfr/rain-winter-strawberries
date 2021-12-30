@@ -24,6 +24,9 @@ public class ClinicListController {
 	private Button addBtn;
 
 	@FXML
+	private Button doctorClinicBtn;
+
+	@FXML
 	private BorderPane borderPane;
 
 	@FXML
@@ -56,7 +59,7 @@ public class ClinicListController {
 	private Alert notSelectedAlert = new Alert(Alert.AlertType.ERROR);
 
 	@FXML
-    void showChangeHours(ActionEvent event) throws InterruptedException, IOException {
+    void showChangeHours(ActionEvent event) throws InterruptedException, IOException { //change so that chosed day is displayed on changehours window, if there is any.
     	Clinic curClinic = clinicTable.getSelectionModel().getSelectedItem();
 		if(curClinic == null){
 			notSelectedAlert.setContentText("No Clinic Selected!");
@@ -75,6 +78,27 @@ public class ClinicListController {
     	stage.showAndWait();
     	loadData();
     }
+
+	@FXML
+	void showDoctorClinic(ActionEvent event) throws InterruptedException, IOException {
+		Clinic curClinic = clinicTable.getSelectionModel().getSelectedItem();
+		if(curClinic == null){
+			notSelectedAlert.setContentText("No Clinic Selected!");
+			notSelectedAlert.showAndWait();
+			return;
+		}
+		Stage stage = new Stage();
+		Scene scene;
+		FXMLLoader fxmlLoader = new FXMLLoader(ClinicListController.class.getResource("doctorClinicList.fxml"));
+		DoctorClinicListController controller = new DoctorClinicListController();
+		controller.setClient(chatClient);
+		controller.setClinic(curClinic);
+		fxmlLoader.setController(controller);
+		scene = new Scene(fxmlLoader.load(), 1214, 419);
+		stage.setScene(scene);
+		stage.showAndWait();
+		loadData();
+	}
 
     @FXML
     void returnToMenu(ActionEvent event) throws IOException {

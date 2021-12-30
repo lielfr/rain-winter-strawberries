@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -42,18 +43,55 @@ public class Clinic implements Serializable{
 	@ElementCollection(targetClass=LocalTime.class)
 	private List<LocalTime> closeHours;
 
+	@Column(name = "covidTestOpenHours")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@ElementCollection(targetClass=LocalTime.class)
+	private List<LocalTime> covidTestOpenHours;
+
+	@Column(name = "covidTestCloseHours")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@ElementCollection(targetClass=LocalTime.class)
+	private List<LocalTime> covidTestCloseHours;
+
+	@Column(name = "covidVaccOpenHours")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@ElementCollection(targetClass=LocalTime.class)
+	private List<LocalTime> covidVaccOpenHours;
+
+	@Column(name = "covidVaccCloseHours")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@ElementCollection(targetClass=LocalTime.class)
+	private List<LocalTime> covidVaccCloseHours;
+
+	private boolean hasCovidTests;
+	private boolean hasCovidVaccinations;
+
+	@OneToMany(mappedBy = "clinic")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<DoctorClinic> doctorClinics = null;
 
 	private transient StringProperty curOpenHour;
 	private transient StringProperty curCloseHour;
+	private transient StringProperty curCovidTestOpenHour;
+	private transient StringProperty curCovidTestCloseHour;
+	private transient StringProperty curCovidVaccOpenHour;
+	private transient StringProperty curCovidVaccCloseHour;
 	//private transient LocalTime curOpenHour;
 	//private transient LocalTime curCloseHour;
 	private transient ChoiceBox<String> dayOfWeek;
 
-	public Clinic(String name, String location, List<LocalTime> openHours, List<LocalTime> closeHours) {
+	public Clinic(String name, String location, List<LocalTime> openHours, List<LocalTime> closeHours,
+				  List<LocalTime> covidTestOpenHours, List<LocalTime> covidTestCloseHours, List<LocalTime> covidVaccOpenHours, List<LocalTime> covidVaccCloseHours, boolean test, boolean vac) {
 		this.name = name;
 		this.location = location;
 		this.openHours = openHours;
 		this.closeHours = closeHours;
+		this.covidTestCloseHours = covidTestCloseHours;
+		this.covidTestOpenHours = covidTestOpenHours;
+		this.covidVaccOpenHours = covidVaccOpenHours;
+		this.covidVaccCloseHours = covidVaccCloseHours;
+		this.hasCovidTests = test;
+		this.hasCovidVaccinations = vac;
 	}
 
 	public Clinic () {
@@ -62,7 +100,6 @@ public class Clinic implements Serializable{
 	 public Clinic(Clinic m) {
 		this.name = m.getName();
 		this.location = m.getLocation();
-		this.openHours = m.getOpenHours();
 
 		 this.openHours=(new ArrayList<LocalTime>());
 		 for(LocalTime t: m.getOpenHours()){
@@ -72,17 +109,119 @@ public class Clinic implements Serializable{
 		 for(LocalTime t: m.getCloseHours()){
 			 this.closeHours.add(t);
 		 }
+
+		 this.covidTestOpenHours=(new ArrayList<LocalTime>());
+		 for(LocalTime t: m.getCovidTestOpenHours()){
+			 this.covidTestOpenHours.add(t);
+		 }
+		 this.covidTestCloseHours=(new ArrayList<LocalTime>());
+		 for(LocalTime t: m.getCovidTestCloseHours()){
+			 this.covidTestCloseHours.add(t);
+		 }
+
+		 this.covidVaccOpenHours=(new ArrayList<LocalTime>());
+		 for(LocalTime t: m.getCovidVaccOpenHours()){
+			 this.covidVaccOpenHours.add(t);
+		 }
+		 this.covidVaccCloseHours=(new ArrayList<LocalTime>());
+		 for(LocalTime t: m.getCovidVaccCloseHours()){
+			 this.covidVaccCloseHours.add(t);
+		 }
+
+		 this.doctorClinics = new ArrayList<DoctorClinic>();
+		 for(DoctorClinic dc: m.getDoctorClinics()){
+		 	this.doctorClinics.add(dc);
+		 }
+
 		 this.id = m.getId();
+		 this.hasCovidVaccinations = m.getHasCovidVaccinations();
+		 this.hasCovidTests = m.getHasCovidTests();
 	 }
 	 
 	 @Override
-	    public String toString() {
+	 public String toString() {
 	        return String.format(name + " | " + location + " | " + openHours + "\n");
 	    }
 
 	 public int getId(){
 		 return this.id;
 	 }
+
+	public List<DoctorClinic> getDoctorClinics() {
+		return doctorClinics;
+	}
+
+	public void setDoctorClinics(List<DoctorClinic> doctorClinics) {
+		this.doctorClinics = doctorClinics;
+	}
+
+	public boolean getHasCovidTests() {
+		return hasCovidTests;
+	}
+
+	public void setHasCovidTests(boolean hasCovidTests) {
+		this.hasCovidTests = hasCovidTests;
+	}
+
+	public boolean getHasCovidVaccinations() {
+		return hasCovidVaccinations;
+	}
+
+	public void setHasCovidVaccinations(boolean hasCovidVaccinations) {
+		this.hasCovidVaccinations = hasCovidVaccinations;
+	}
+
+	public List<LocalTime> getCovidTestOpenHours() {
+		return covidTestOpenHours;
+	}
+
+	public void setCovidTestOpenHours(List<LocalTime> covidTestOpenHours) {
+		this.covidTestOpenHours = covidTestOpenHours;
+	}
+
+	public List<LocalTime> getCovidTestCloseHours() {
+		return covidTestCloseHours;
+	}
+
+	public void setCovidTestCloseHours(List<LocalTime> covidTestCloseHours) {
+		this.covidTestCloseHours = covidTestCloseHours;
+	}
+
+	public List<LocalTime> getCovidVaccOpenHours() {
+		return covidVaccOpenHours;
+	}
+
+	public void setCovidVaccOpenHours(List<LocalTime> covidVaccOpenHours) {
+		this.covidVaccOpenHours = covidVaccOpenHours;
+	}
+
+	public List<LocalTime> getCovidVaccCloseHours() {
+		return covidVaccCloseHours;
+	}
+
+	public void setCovidVaccCloseHours(List<LocalTime> covidVaccCloseHours) {
+		this.covidVaccCloseHours = covidVaccCloseHours;
+	}
+
+	public StringProperty curCovidTestOpenHourProperty() { return curCovidTestOpenHour; }
+	public void setCurCovidTestOpenHourProperty(SimpleStringProperty s){ this.curCovidTestOpenHour = s; }
+	public String getCurCovidTestOpenHour() { return curCovidTestOpenHour.get(); }
+	public void setCurCovidTestOpenHour(String name) { curCovidTestOpenHour.set(name); }
+
+	public StringProperty curCovidTestCloseHourProperty() { return curCovidTestCloseHour; }
+	public void setCurCovidTestCloseHourProperty(SimpleStringProperty s){ this.curCovidTestCloseHour = s; }
+	public String getCurCovidTestCloseHour() { return curCovidTestCloseHour.get(); }
+	public void setCurCovidTestCloseHour(String name) { curCovidTestCloseHour.set(name); }
+
+	public StringProperty curCovidVaccOpenHourProperty() { return curCovidVaccOpenHour; }
+	public void setCurCovidVaccOpenHourProperty(SimpleStringProperty s){ this.curCovidVaccOpenHour = s; }
+	public String getCurCovidVaccOpenHour() { return curCovidVaccOpenHour.get(); }
+	public void setCurCovidVaccOpenHour(String name) { curCovidVaccOpenHour.set(name); }
+
+	public StringProperty curCovidVaccCloseHourProperty() { return curCovidVaccCloseHour; }
+	public void setCurCovidVaccCloseHourProperty(SimpleStringProperty s){ this.curCovidVaccCloseHour = s; }
+	public String getCurCovidVaccCloseHour() { return curCovidVaccCloseHour.get(); }
+	public void setCurCovidVaccCloseHour(String name) { curCovidVaccCloseHour.set(name); }
 
 	public StringProperty curOpenHourProperty() { return curOpenHour; }
 	public void setCurOpenHourProperty(SimpleStringProperty s){ this.curOpenHour = s; }

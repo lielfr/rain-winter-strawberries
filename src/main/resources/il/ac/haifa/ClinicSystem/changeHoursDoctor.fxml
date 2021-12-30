@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    <top>
+        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="25.0" prefWidth="129.0" text="Change Working Hours" BorderPane.alignment="CENTER">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font>
+        </Label>
+    </top>
+    <center>
+        <GridPane prefHeight="353.0" prefWidth="607.0" BorderPane.alignment="CENTER">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="647.0" minWidth="10.0" prefWidth="607.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="167.0" minHeight="73.0" prefHeight="131.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="159.0" minHeight="69.0" prefHeight="105.0" vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
+                    <children>
+                        <Label text="Enter Patient Acceptance Start Time" />
+                        <TextField fx:id="startTime" promptText="HH:mm">
+                            <VBox.margin>
+                                <Insets right="15.0" />
+                            </VBox.margin>
+                        </TextField>
+                    </children>
+                    <GridPane.margin>
+                        <Insets left="15.0" />
+                    </GridPane.margin>
+                </VBox>
+                <VBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
+                    <children>
+                        <Label text="Enter Patient Acceptance Stop Time" />
+                        <TextField fx:id="stopTime" promptText="HH:mm">
+                            <VBox.margin>
+                                <Insets right="15.0" />
+                            </VBox.margin>
+                        </TextField>
+                    </children>
+                    <GridPane.margin>
+                        <Insets left="15.0" />
+                    </GridPane.margin>
+                </VBox>
+                <ButtonBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="109.0" prefWidth="100.0" GridPane.rowIndex="3">
+                    <buttons>
+                        <Button fx:id="commitBtn" alignment="CENTER" mnemonicParsing="false" onAction="#commitChanges" text="Commit Changes" textAlignment="CENTER" />
+                        <Button fx:id="exitBtn" mnemonicParsing="false" onAction="#exitFromChangeHours" text="Exit" />
+                    </buttons>
+                    <GridPane.margin>
+                        <Insets left="15.0" />
+                    </GridPane.margin>
+                </ButtonBar>
+                <ChoiceBox fx:id="dayChoice" prefHeight="26.0" prefWidth="103.0">
+                    <GridPane.margin>
+                        <Insets left="15.0" />
+                    </GridPane.margin>
+                </ChoiceBox>
+            </children>
+            <BorderPane.margin>
+                <Insets />
+            </BorderPane.margin>
+        </GridPane>
+    </center>
+</BorderPane>

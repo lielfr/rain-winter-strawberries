@@ -48,6 +48,11 @@ public class App extends Application {
 	        controller.setClient(client);
 	        fxmlLoader.setController(controller);
         }
+        if(fxml.equals("covidServicesList")) {
+            CovidServicesListController controller = new CovidServicesListController();
+            controller.setClient(client);
+            fxmlLoader.setController(controller);
+        }
         
         return fxmlLoader.load();
     }
