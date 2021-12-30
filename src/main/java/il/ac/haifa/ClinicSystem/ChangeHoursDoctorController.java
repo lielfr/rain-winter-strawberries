@@ -55,13 +55,13 @@ public class ChangeHoursDoctorController {
         newDoctorClinic =  new DoctorClinic(curDoctorClinic);
         if (selectedDay != null){
             if(!startTime.getText().isEmpty() && !stopTime.getText().isEmpty()){
-                newDoctorClinic.getWorkingHours().replace(selectedDay, new Pair<>(LocalTime.parse(startTime.getText()), LocalTime.parse(stopTime.getText())));
+                newDoctorClinic.getWorkingHours().put(selectedDay, new Pair<>(LocalTime.parse(startTime.getText()), LocalTime.parse(stopTime.getText())));
             }
             else if (!startTime.getText().isEmpty()) {
-                newDoctorClinic.getWorkingHours().replace(selectedDay, new Pair<>(LocalTime.parse(startTime.getText()), newDoctorClinic.getWorkingHours().get(selectedDay).getValue()));
+                newDoctorClinic.getWorkingHours().put(selectedDay, new Pair<>(LocalTime.parse(startTime.getText()), newDoctorClinic.getWorkingHours().get(selectedDay).getValue()));
             }
             else{
-                newDoctorClinic.getWorkingHours().replace(selectedDay, new Pair<>(newDoctorClinic.getWorkingHours().get(selectedDay).getKey(), LocalTime.parse(stopTime.getText())));
+                newDoctorClinic.getWorkingHours().put(selectedDay, new Pair<>(newDoctorClinic.getWorkingHours().get(selectedDay).getKey(), LocalTime.parse(stopTime.getText())));
             }
         }
         chatClient.sendToServer(newDoctorClinic);
